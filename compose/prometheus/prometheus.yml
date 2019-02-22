@@ -1,0 +1,16 @@
+global:
+  scrape_interval:     5s
+  evaluation_interval: 5s
+
+  external_labels:
+      monitor: 'prometheus-grafana-exporter'
+
+scrape_configs:
+  - job_name: 'prometheus'
+    static_configs:
+      - targets: ['prometheus:9090']
+
+  - job_name: 'django-dramatiq'
+    scrape_interval: 5s
+    static_configs:
+      - targets: ['django-dramatiq:9191']

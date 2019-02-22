@@ -1,0 +1,14 @@
+wheel
+Django
+django-dramatiq
+dramatiq[all]
+raven
+psycopg2-binary
+django-split-settings
+djangorestframework
+gunicorn
+eventlet
+APScheduler
+apscheduler-dramatiq-executor==1.0.0
+dramatiq-tasks-manager==0.0.2
+sqlalchemy
