@@ -2,7 +2,7 @@ APSCHEDULER_SETTINGS = {
     # Store all scheduled tasks in postgresql database
     'apscheduler.jobstores.default': {
         'type': 'sqlalchemy',
-        'url': 'postgresql+psycopg2://postgres:postgres@localhost/myproject'
+        'url': f'postgresql+psycopg2://postgres:postgres@{POSTRESQL_HOST}/myproject'
     },
     'apscheduler.executors.default': {
         'class': 'apscheduler_dramatiq_executor.executor:DramatiqExecutor',
