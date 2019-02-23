@@ -1,3 +1,14 @@
+"""
+Tasks listed bellow is almost useless. It's just for simple example.
+
+Please read dramatiq docs:
+* https://dramatiq.io/cookbook.html
+* https://dramatiq.io/best_practices.html
+* https://dramatiq.io/reference.html#message-composition
+* https://dramatiq.io/reference.html#class-based-actors
+* ... and of course other articles. Dramatiq docs are quite short and you could get all basics in ~30 minutes.
+"""
+
 import time
 
 import dramatiq
