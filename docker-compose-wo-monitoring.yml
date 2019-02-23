@@ -1,0 +1,85 @@
+version: '3.4'
+services:
+  rabbit:
+    image: rabbitmq:3-management
+    volumes:
+      - rabbit_data:/var/lib/rabbit/data
+    ports:
+      - 5672:5672/tcp
+      - 15672:15672/tcp
+    restart: unless-stopped
+    networks:
+      - net1
+
+  redis:
+    restart: unless-stopped
+    image: redis:latest
+    volumes:
+      - redis_data:/data
+    ports:
+      - "6379:6379"
+    networks:
+      - net1
+
+  postgres:
+    image: postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      #POSTGRES_DB:
+      POSTGRES_MULTIPLE_DATABASES: sentry,myproject
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./compose/postgres/initdb:/docker-entrypoint-initdb.d
+    restart: unless-stopped
+    ports:
+      - "5432:5432"
+    networks:
+      - net1
+
+  dramatiq_worker:
+     restart: unless-stopped
+     build:
+       context: .
+       dockerfile: compose/common/Dockerfile
+     env_file: compose/common/django-dramatiq.env
+     environment:
+       dramatiq_prom_host: dramatiq_worker
+       dramatiq_prom_port: 9191
+     depends_on:
+       - rabbit
+       - redis
+       - postgres
+     volumes:
+       - ./:/code
+       - ./compose/dramatiq/start.sh:/start.sh
+     entrypoint: /start.sh
+     networks:
+       - net1
+
+  dramatiq_tasks_api:
+     restart: unless-stopped
+     build:
+       context: .
+       dockerfile: compose/common/Dockerfile
+     env_file: compose/common/django-dramatiq.env
+     depends_on:
+       - rabbit
+       - redis
+       - postgres
+     volumes:
+       - ./:/code
+       - ./compose/api/start.sh:/start.sh
+     entrypoint: /start.sh
+     networks:
+       - net1
+
+volumes:
+  rabbit_data:
+  redis_data:
+  postgres_data:
+  prometheus_data:
+  grafana_data:
+
+networks:
+  net1:

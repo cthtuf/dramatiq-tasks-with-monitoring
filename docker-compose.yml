@@ -38,50 +38,43 @@ services:
       - net1
 
   dramatiq_worker:
-     restart: unless-stopped
-     build:
-       context: .
-       dockerfile: compose/common/Dockerfile
-     env_file: compose/common/django-dramatiq.env
-     environment:
-       dramatiq_prom_host: dramatiq_worker
-       dramatiq_prom_port: 9191
-       SENTRY_DSN:
-       REDIS_HOST: redis
-       RABBIT_HOST: rabbit
-       POSTGRESQL_HOST: postgres
-     depends_on:
-       - rabbit
-       - redis
-       - postgres
-     volumes:
-       - ./:/code
-       - ./compose/dramatiq/start.sh:/start.sh
-     entrypoint: /start.sh
-     networks:
-       - net1
+    restart: unless-stopped
+    build:
+      context: .
+      dockerfile: compose/common/Dockerfile
+    env_file: compose/common/django-dramatiq.env
+    environment:
+      dramatiq_prom_host: dramatiq_worker
+      dramatiq_prom_port: 9191
+    depends_on:
+      - rabbit
+      - redis
+      - postgres
+    volumes:
+      - ./:/code
+      - ./compose/dramatiq/start.sh:/start.sh
+    entrypoint: /start.sh
+    networks:
+      - net1
 
   dramatiq_tasks_api:
-     restart: unless-stopped
-     build:
-       context: .
-       dockerfile: compose/common/Dockerfile
-     env_file: compose/common/django-dramatiq.env
-     environment:
-       SENTRY_DSN:
-       REDIS_HOST: redis
-       RABBIT_HOST: rabbit
-       POSTGRESQL_HOST: postgres
-     depends_on:
-       - rabbit
-       - redis
-       - postgres
-     volumes:
-       - ./:/code
-       - ./compose/api/start.sh:/start.sh
-     entrypoint: /start.sh
-     networks:
-       - net1
+    restart: unless-stopped
+    build:
+      context: .
+      dockerfile: compose/common/Dockerfile
+    env_file: compose/common/django-dramatiq.env
+    depends_on:
+      - rabbit
+      - redis
+      - postgres
+    volumes:
+      - ./:/code
+      - ./compose/api/start.sh:/start.sh
+    entrypoint: /start.sh
+    ports:
+      - 8000:8000
+    networks:
+      - net1
 
   sentry:
     image: sentry
