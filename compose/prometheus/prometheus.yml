@@ -10,7 +10,7 @@ scrape_configs:
     static_configs:
       - targets: ['prometheus:9090']
 
-  - job_name: 'django-dramatiq'
+  - job_name: 'dramatiq_worker'
     scrape_interval: 5s
     static_configs:
-      - targets: ['django-dramatiq:9191']
+      - targets: ['dramatiq_worker:9191']
