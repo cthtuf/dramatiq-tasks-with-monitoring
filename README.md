@@ -63,10 +63,11 @@
     4. Проверьте наличие исключения ZeroDivisionError в Sentry
     ```    
     
-9. Чтобы проверить работоспособность мониторинга Prometheus и Grafana, можно воспользоваться запуском задач, которые присутствуют в mytasks/tasks.py. Для этого нужно выполнить api запрос несколько раз и посмотреть результаты мониторинга в Grafana за последние 15 минут:
+9. Чтобы проверить работоспособность мониторинга Prometheus и Grafana, можно воспользоваться запуском задач, которые присутствуют в mytasks/tasks.py. Для этого нужно создать тестового пользователя, выполнить от его имени api запрос несколько раз и посмотреть результаты мониторинга в Grafana за последние 15 минут:
     ```
-    1. curl -X POST http://localhost:8000/execute -H 'Content-Type: application/json' -d '{"actor_name": "print_result", "kwargs": {"message_data": {"message_id": "123456789"},"result": "This actor is almost useless for direct calling. Use it as success-callback for other actors."}}' 
-    2. http://localhost:3000/d/BYP7Moriz/dramatiq?orgId=1&from=now-15m&to=now
+    1. docker-compose exec -T dramatiq_tasks_api bash -c './manage.py createtestuser'
+    2. curl -X POST http://localhost:8000/execute -H 'Content-Type: application/json' -d '{"actor_name": "print_result", "kwargs": {"message_data": {"message_id": "123456789"},"result": "This actor is almost useless for direct calling. Use it as success-callback for other actors."}}' 
+    3. http://localhost:3000/d/BYP7Moriz/dramatiq?orgId=1&from=now-15m&to=now
     ```
     
 ***
