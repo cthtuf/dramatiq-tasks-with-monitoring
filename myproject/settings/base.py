@@ -16,6 +16,10 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'raven.contrib.django.raven_compat',
     'mytasks',
+    'dramatiq_tasks_manager',
+    'django_dramatiq',
+    'apscheduler',
+    'rest_framework',
 ]
 
 MIDDLEWARE = [

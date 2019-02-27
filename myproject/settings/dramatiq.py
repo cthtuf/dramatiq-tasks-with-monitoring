@@ -1,9 +1,7 @@
 import os
 
-RABBIT_HOST = os.getenv("RABBIT_HOST", "localhost")
-REDIS_HOST = os.getenv("REDIS_HOST", "localhost")
-
-INSTALLED_APPS.append('django_dramatiq')
+RABBIT_HOST = os.getenv("RABBIT_HOST", "")
+REDIS_HOST = os.getenv("REDIS_HOST", "")
 
 DRAMATIQ_BROKER = {
     "BROKER": "dramatiq.brokers.rabbitmq.RabbitmqBroker",

@@ -10,5 +10,5 @@ gunicorn
 eventlet
 APScheduler
 apscheduler-dramatiq-executor==1.0.0
-dramatiq-tasks-manager==0.0.5
+dramatiq-tasks-manager==0.0.8
 sqlalchemy

@@ -71,6 +71,8 @@ services:
        - ./:/code
        - ./compose/api/start.sh:/start.sh
      entrypoint: /start.sh
+     ports:
+       - 8000:8000
      networks:
        - net1
 
@@ -78,8 +80,6 @@ volumes:
   rabbit_data:
   redis_data:
   postgres_data:
-  prometheus_data:
-  grafana_data:
 
 networks:
   net1:

@@ -1,5 +1,3 @@
-INSTALLED_APPS.append('rest_framework')
-
 REST_FRAMEWORK = {
     'DEFAULT_VERSIONING_CLASS': 'rest_framework.versioning.AcceptHeaderVersioning',
     'DEFAULT_AUTHENTICATION_CLASSES': [
