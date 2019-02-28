@@ -1,0 +1,85 @@
+# This config is just example and is not production ready.
+
+image:
+  name: docker/compose:1.23.2
+  entrypoint: ["/bin/sh", "-c"]
+
+variables:
+  CONTAINER_TEST_IMAGE: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG
+  CONTAINER_RELEASE_IMAGE: $CI_REGISTRY_IMAGE:latest
+
+services:
+  - docker:dind
+
+before_script:
+  - docker version
+  - docker-compose version
+  - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
+
+stages:
+  - build
+  - test
+  - release-image
+  - deploy
+
+build:
+  tags:
+    - docker
+  stage: build
+  variables:
+    DOCKER_HOST: tcp://docker:2375/
+    DOCKER_DRIVER: overlay2
+  script:
+    - docker build --pull -t $CONTAINER_TEST_IMAGE -f ./compose/common/Dockerfile .
+    - docker push $CONTAINER_TEST_IMAGE
+
+test_dtm:
+  tags:
+    - docker
+  stage: test
+  variables:
+    DOCKER_HOST: tcp://docker:2375/
+    DOCKER_DRIVER: overlay2
+  script:
+    - docker pull $CONTAINER_TEST_IMAGE
+    - docker-compose -f docker-compose-wo-monitoring.yml up -d --no-build
+    - sleep 10
+    - docker-compose -f docker-compose-wo-monitoring.yml exec -T dramatiq_tasks_api bash -c './manage.py test dramatiq_tasks_manager'
+
+test_dt:
+  tags:
+    - docker
+  stage: test
+  variables:
+    DOCKER_HOST: tcp://docker:2375/
+    DOCKER_DRIVER: overlay2
+  script:
+    - docker pull $CONTAINER_TEST_IMAGE
+    - docker-compose -f docker-compose-wo-monitoring.yml up -d --no-build
+    - sleep 10
+    - docker-compose -f docker-compose-wo-monitoring.yml exec -T dramatiq_tasks_api bash -c './manage.py test'
+
+release-image:
+  tags:
+    - docker
+  stage: release-image
+  variables:
+    DOCKER_HOST: tcp://docker:2375/
+    DOCKER_DRIVER: overlay2
+  script:
+    - docker pull $CONTAINER_TEST_IMAGE
+    - docker tag $CONTAINER_TEST_IMAGE $CONTAINER_RELEASE_IMAGE
+    - docker push $CONTAINER_RELEASE_IMAGE
+
+deploy:
+  tags:
+    - prod_ssh
+  stage: deploy
+  variables:
+    CI_COMMIT_REF_SLUG: latest
+  before_script:
+    - echo "Deploy starting"
+  script:
+    - cd ~/dramatiq-tasks-with-monitoring
+    - docker pull $CONTAINER_RELEASE_IMAGE
+    - docker-compose -f docker-compose-wo-monitoring.yml up -d --no-build

@@ -5,7 +5,6 @@ services:
     volumes:
       - rabbit_data:/var/lib/rabbit/data
     ports:
-      - 5672:5672/tcp
       - 15672:15672/tcp
     restart: unless-stopped
     networks:
@@ -16,8 +15,6 @@ services:
     image: redis:latest
     volumes:
       - redis_data:/data
-    ports:
-      - "6379:6379"
     networks:
       - net1
 
@@ -27,17 +24,16 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
       #POSTGRES_DB:
-      POSTGRES_MULTIPLE_DATABASES: sentry,myproject
+      POSTGRES_MULTIPLE_DATABASES: myproject
     volumes:
       - postgres_data:/var/lib/postgresql/data
       - ./compose/postgres/initdb:/docker-entrypoint-initdb.d
     restart: unless-stopped
-    ports:
-      - "5432:5432"
     networks:
       - net1
 
   dramatiq_worker:
+     image: registry.gitlab.com/cthtuf/dramatiq-tasks-with-monitoring:${CI_COMMIT_REF_SLUG}
      restart: unless-stopped
      build:
        context: .
@@ -58,6 +54,7 @@ services:
        - net1
 
   dramatiq_tasks_api:
+     image: registry.gitlab.com/cthtuf/dramatiq-tasks-with-monitoring:${CI_COMMIT_REF_SLUG}
      restart: unless-stopped
      build:
        context: .
