@@ -20,6 +20,7 @@ stages:
   - build
   - test
   - release-image
+  - approve
   - deploy
 
 build:
@@ -70,6 +71,14 @@ release-image:
     - docker pull $CONTAINER_TEST_IMAGE
     - docker tag $CONTAINER_TEST_IMAGE $CONTAINER_RELEASE_IMAGE
     - docker push $CONTAINER_RELEASE_IMAGE
+
+approve:
+  stage: approve
+  tags:
+    - docker
+  when: manual
+  script:
+    - echo "APPROVED"
 
 deploy:
   tags:
