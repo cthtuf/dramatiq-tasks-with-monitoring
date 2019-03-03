@@ -1,7 +1,7 @@
 import os
 
-RABBIT_HOST = os.getenv("RABBIT_HOST", "")
-REDIS_HOST = os.getenv("REDIS_HOST", "")
+RABBIT_HOST = os.getenv("RABBIT_HOST")
+REDIS_HOST = os.getenv("REDIS_HOST")
 
 DRAMATIQ_BROKER = {
     "BROKER": "dramatiq.brokers.rabbitmq.RabbitmqBroker",
@@ -25,7 +25,7 @@ DRAMATIQ_TASKS_MAX_AGE_TO_STORE = 360
 
 DRAMATIQ_RESULT_BACKEND = {
     "BACKEND": "dramatiq.results.backends.redis.RedisBackend",
-    "BACKED_OPTIONS": {
+    "BACKEND_OPTIONS": {
         "url": f"redis://{REDIS_HOST}:6379",
     },
     "MIDDLEWARE_OPTIONS": {
