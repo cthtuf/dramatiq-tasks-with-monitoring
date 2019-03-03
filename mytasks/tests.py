@@ -69,6 +69,8 @@ class TasksTestCase(APITestCase):
     def test_task_find_smallest_in_small_array(self):
         self.assertTrue(self.login(self.user_executor_data))
 
+        print()
+
         list_data = [3, 9, 14, -3, 2, 7]
         smallest = -3
 
@@ -79,7 +81,8 @@ class TasksTestCase(APITestCase):
             }
         }
         post_response = self.post('task_execute', data=payload, path_app='dramatiq_tasks_manager')
-        self.assertEqual(201, post_response.status_code)
+        self.assertEqual(201, post_response.status_code,
+                         msg=f"Undexpected response_code. Response: {post_response.data}")
 
         execute_resp_json = post_response.json()
         message_id = execute_resp_json.get('message_id')
@@ -88,36 +91,8 @@ class TasksTestCase(APITestCase):
         detail_get_resp = self.get('task_executed_detail',
                                    path_kwargs={'id': message_id},
                                    path_app='dramatiq_tasks_manager')
-        self.assertEqual(200, detail_get_resp.status_code)
-        get_resp_json = detail_get_resp.json()
-        self.assertIsNotNone(get_resp_json, "Task data is empty")
-        result = get_resp_json.get('result')
-        self.assertIsNotNone(result, "Result is empty")
-        self.assertEqual(result, smallest)
-
-    def test_task_find_smallest_in_big_array(self):
-        self.assertTrue(self.login(self.user_executor_data))
-
-        list_data = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16]
-        smallest = 1
-
-        payload = {
-            'actor_name': 'find_smallest_in_big_array',
-            'kwargs': {
-                'data': list_data
-            }
-        }
-        post_response = self.post('task_execute', data=payload, path_app='dramatiq_tasks_manager')
-        self.assertEqual(201, post_response.status_code)
-
-        execute_resp_json = post_response.json()
-        message_id = execute_resp_json.get('message_id')
-        self.assertIsNotNone(message_id, "Message ID is empty. Seems like task wasn't executed")
-        sleep(5)
-        detail_get_resp = self.get('task_executed_detail',
-                                   path_kwargs={'id': message_id},
-                                   path_app='dramatiq_tasks_manager')
-        self.assertEqual(200, detail_get_resp.status_code)
+        self.assertEqual(200, detail_get_resp.status_code,
+                         msg=f"Undexpected response_code. Response: {detail_get_resp.data}")
         get_resp_json = detail_get_resp.json()
         self.assertIsNotNone(get_resp_json, "Task data is empty")
         result = get_resp_json.get('result')

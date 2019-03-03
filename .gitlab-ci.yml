@@ -20,7 +20,6 @@ stages:
   - build
   - test
   - release-image
-  - approve
   - deploy
 
 build:
@@ -44,8 +43,8 @@ test_dtm:
   script:
     - docker pull $CONTAINER_TEST_IMAGE
     - docker-compose -f docker-compose-wo-monitoring.yml up -d --no-build
-    - sleep 10
-    - docker-compose -f docker-compose-wo-monitoring.yml exec -T dramatiq_tasks_api bash -c './manage.py test dramatiq_tasks_manager'
+    - sleep 15
+    - docker-compose -f docker-compose-wo-monitoring.yml exec -T dramatiq_tasks_api bash -c './manage.py test dramatiq_tasks_manager -v 2'
 
 test_dt:
   tags:
@@ -57,8 +56,9 @@ test_dt:
   script:
     - docker pull $CONTAINER_TEST_IMAGE
     - docker-compose -f docker-compose-wo-monitoring.yml up -d --no-build
-    - sleep 10
-    - docker-compose -f docker-compose-wo-monitoring.yml exec -T dramatiq_tasks_api bash -c './manage.py test'
+    - sleep 60
+    - docker-compose -f docker-compose-wo-monitoring.yml logs --tail=5000
+    - docker-compose -f docker-compose-wo-monitoring.yml exec -T dramatiq_tasks_api bash -c './manage.py test -v 2'
 
 release-image:
   tags:
@@ -72,18 +72,11 @@ release-image:
     - docker tag $CONTAINER_TEST_IMAGE $CONTAINER_RELEASE_IMAGE
     - docker push $CONTAINER_RELEASE_IMAGE
 
-approve:
-  stage: approve
-  tags:
-    - docker
-  when: manual
-  script:
-    - echo "APPROVED"
-
 deploy:
   tags:
     - prod_ssh
   stage: deploy
+  when: manual
   variables:
     CI_COMMIT_REF_SLUG: latest
   before_script:
