@@ -1,14 +1,14 @@
 import os
 
-POSTRESQL_HOST = os.getenv("POSTGRESQL_HOST", "localhost")
+POSTRESQL_HOST = os.getenv("POSTGRESQL_HOST")
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'myproject',
-        'USER': 'postgres',
-        'PASSWORD': 'postgres',
-        'HOST': POSTRESQL_HOST,
-        'PORT': 5432,
+    "default": {
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": "myproject",
+        "USER": "postgres",
+        "PASSWORD": "postgres",
+        "HOST": POSTRESQL_HOST,
+        "PORT": 5432,
     }
 }

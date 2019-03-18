@@ -1,3 +1,7 @@
+"""
+This file is just example that you actor methods should be thin and doesn't have to contain a lot of logic
+"""
+
 from random import randint
 
 

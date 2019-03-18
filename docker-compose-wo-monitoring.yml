@@ -5,6 +5,7 @@ services:
     volumes:
       - rabbit_data:/var/lib/rabbit/data
     ports:
+      - 5672:5672/tcp
       - 15672:15672/tcp
     restart: unless-stopped
     networks:
@@ -17,6 +18,8 @@ services:
       - redis_data:/data
     networks:
       - net1
+    ports:
+      - "6379:6379"
 
   postgres:
     image: postgres
@@ -31,6 +34,8 @@ services:
     restart: unless-stopped
     networks:
       - net1
+    ports:
+      - 5432:5432
 
   dramatiq_worker:
      image: registry.gitlab.com/cthtuf/dramatiq-tasks-with-monitoring:${CI_COMMIT_REF_SLUG}
