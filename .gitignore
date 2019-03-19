@@ -116,3 +116,10 @@ dmypy.json
 .pyre/
 
 .idea
+
+.gitmodules
+
+dev.yml
+
+dramatiq_tasks_manager
+assets
