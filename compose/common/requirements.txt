@@ -9,7 +9,7 @@ django-split-settings==0.3.0
 djangorestframework==3.9.2
 dnspython==1.16.0
 dramatiq==1.5.0
-dramatiq-tasks-manager==0.0.10
+dramatiq-tasks-manager==0.0.11
 eventlet==0.24.1
 gevent==1.4.0
 greenlet==0.4.15
@@ -36,3 +36,4 @@ virtualenv==16.4.3
 watchdog==0.8.3
 watchdog-gevent==0.1.0
 zipp==0.3.3
+django-rest-swagger==2.1.2
