@@ -13,7 +13,7 @@
 Что нужно для того чтобы начать работать с Dramatiq с этим проектом?
 1. Переименуйте папку с проектом и приложением myproject и mytasks как вам удобно
 2. Не забудьте про настройки myproject/settings/*. Поправьте их под себя
-3. Напишите несколько задач и добавьте их в mytasks/tasks или создайте свое приложение. Воркер Dramatiq подключит все Actors из файлов tasks.py во всех приложениях из INSTALLED_APPS   
+3. Напишите несколько задач и добавьте их в mytasks/tasks или создайте свое приложение. Воркер Dramatiq подключит все Actors из файлов tasks.py во всех приложениях из INSTALLED_APPS  
 
 Это все! Осталось только запустить контейнеры.
 
@@ -22,15 +22,15 @@
 1. Запуск воркера и апи, без поддержки мониторинга и логгирования ошибок в Sentry.
 2. Запуск воркера, апи, логгирования в sentry и мониторинга prometheus+gramana
 
-##### 1. Запуск воркеров без мониторинга и логгирования в Sentry 
-Сделать это очень просто, достаточно выполнить команду: 
+##### 1. Запуск воркеров без мониторинга и логгирования в Sentry
+Сделать это очень просто, достаточно выполнить команду:
     ```
-    docker-compose -f docker-compose-wo-monitoring up -d
+    docker-compose -f wo-monitoring up -d
     ```
 
 ##### 2. Запуск воркера, апи, логгирования в sentry и мониторинга prometheus+gramana
 Для того чтобы запустить api, воркеры, sentry и мониторинг, необходимо настроить Sentry. Чтобы сделать это, выполните следующие действия:
-1. Запустить контейнеры 
+1. Запустить контейнеры
     ```
     docker-compose up -d
     ```
@@ -40,7 +40,7 @@
     docker-compose exec sentry sentry upgrade --noinput
 
     ```
-3. Перезапустить sentry после миграции 
+3. Перезапустить sentry после миграции
     ```
     docker-compose restart sentry cron worker
     ```
@@ -50,7 +50,7 @@
     ```
 5. Создать новый проект в Sentry http://localhost:9000 и получить DSN
 6. Указать DSN в /compose/common/django-dramatiq.env. Проверьте правильность указания hostname в DSN
-7. Перезапустить dramatiq_worker и dramatiq_tasks_api 
+7. Перезапустить dramatiq_worker и dramatiq_tasks_api
     ```
     docker-compose up -d
     ```
@@ -61,15 +61,15 @@
     2. /code# ./manage.py shell
     3. >>> 3/0
     4. Проверьте наличие исключения ZeroDivisionError в Sentry
-    ```    
-    
+    ```  
+
 9. Чтобы проверить работоспособность мониторинга Prometheus и Grafana, можно воспользоваться запуском задач, которые присутствуют в mytasks/tasks.py. Для этого нужно создать тестового пользователя, выполнить от его имени api запрос несколько раз и посмотреть результаты мониторинга в Grafana за последние 15 минут:
     ```
     1. docker-compose exec -T dramatiq_tasks_api bash -c './manage.py createtestuser'
-    2. curl -X POST http://localhost:8000/execute -H 'Content-Type: application/json' -d '{"actor_name": "print_result", "kwargs": {"message_data": {"message_id": "123456789"},"result": "This actor is almost useless for direct calling. Use it as success-callback for other actors."}}' 
+    2. curl -X POST http://localhost:8000/execute -H 'Content-Type: application/json' -d '{"actor_name": "print_result", "kwargs": {"message_data": {"message_id": "123456789"},"result": "This actor is almost useless for direct calling. Use it as success-callback for other actors."}}'
     3. http://localhost:3000/d/BYP7Moriz/dramatiq?orgId=1&from=now-15m&to=now
     ```
-    
+
 ***
 
 ### Использованные библиотеки

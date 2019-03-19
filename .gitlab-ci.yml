@@ -42,9 +42,9 @@ test_dtm:
     DOCKER_DRIVER: overlay2
   script:
     - docker pull $CONTAINER_TEST_IMAGE
-    - docker-compose -f docker-compose-wo-monitoring.yml up -d --no-build
+    - docker-compose -f wo-monitoring.yml up -d --no-build
     - sleep 15
-    - docker-compose -f docker-compose-wo-monitoring.yml exec -T dramatiq_tasks_api bash -c './manage.py test dramatiq_tasks_manager -v 2'
+    - docker-compose -f wo-monitoring.yml exec -T dramatiq_tasks_api bash -c './manage.py test dramatiq_tasks_manager -v 2'
 
 test_dt:
   tags:
@@ -55,10 +55,10 @@ test_dt:
     DOCKER_DRIVER: overlay2
   script:
     - docker pull $CONTAINER_TEST_IMAGE
-    - docker-compose -f docker-compose-wo-monitoring.yml up -d --no-build
+    - docker-compose -f wo-monitoring.yml up -d --no-build
     - sleep 60
-    - docker-compose -f docker-compose-wo-monitoring.yml logs --tail=5000
-    - docker-compose -f docker-compose-wo-monitoring.yml exec -T dramatiq_tasks_api bash -c './manage.py test -v 2'
+    - docker-compose -f wo-monitoring.yml logs --tail=5000
+    - docker-compose -f wo-monitoring.yml exec -T dramatiq_tasks_api bash -c './manage.py test -v 2'
 
 release-image:
   tags:
@@ -84,4 +84,4 @@ deploy:
   script:
     - cd ~/dramatiq-tasks-with-monitoring
     - docker pull $CONTAINER_RELEASE_IMAGE
-    - docker-compose -f docker-compose-wo-monitoring.yml up -d --no-build
+    - docker-compose -f wo-monitoring.yml up -d --no-build
